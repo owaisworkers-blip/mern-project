@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Test</title>
+</head>
+<body>
+    <h1>Image Loading Test</h1>
+    
+    <h2>Placeholder Image (should work):</h2>
+    <img src="/placeholder.svg" alt="Placeholder" style="width: 300px; height: 200px; object-fit: cover; border-radius: 12px;">
+    
+    <h2>Non-existent Image (should fallback to placeholder):</h2>
+    <img src="/uploads/non-existent.jpg" alt="Non-existent" 
+         style="width: 300px; height: 200px; object-fit: cover; border-radius: 12px;"
+         onerror="this.onerror=null; this.src='/placeholder.svg'; this.alt='Fallback placeholder';">
+    
+    <h2>Direct placeholder access:</h2>
+    <img src="http://localhost:5181/placeholder.svg" alt="Direct placeholder" style="width: 300px; height: 200px; object-fit: cover; border-radius: 12px;">
+</body>
+</html>
