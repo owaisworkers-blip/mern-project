@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "echo 'No build step required for Vercel serverless functions'"
+    "build": "echo 'Building Vercel serverless functions'"
   },
   "keywords": [
     "event-management",

@@ -2,10 +2,10 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/*.js",
+      "src": "api/**/*.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["lib/**", "backend/src/**", "models/**", "utils/**"],
+        "includeFiles": ["lib/**", "backend/src/**", "backend/src/**/*.js", "models/**", "utils/**"],
         "runtime": "nodejs20.x"
       }
     }
