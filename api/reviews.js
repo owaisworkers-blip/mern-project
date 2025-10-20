@@ -2,16 +2,24 @@ import { connectDB } from '../lib/db.js';
 import { authenticate } from '../lib/auth.js';
 import { 
   addReview,
-  getReviews,
+  listReviews as getReviews,
   updateReview,
   deleteReview,
-  getMyReviews
+  getUserReviews as getMyReviews
 } from '../backend/src/controllers/reviewController.js';
 
 export default async function handler(req, res) {
   await connectDB();
   
   const { method } = req;
+  
+  // Authentication required for all endpoints
+  try {
+    const user = authenticate(req);
+    req.user = user;
+  } catch (err) {
+    return res.status(401).json({ message: 'Authentication required' });
+  }
   
   switch (method) {
     case 'POST':

@@ -2,8 +2,8 @@ import { connectDB } from '../lib/db.js';
 import { authenticate } from '../lib/auth.js';
 import { 
   createEvent, 
-  getEvents, 
-  getEventById, 
+  listEvents as getEvents, 
+  getEvent as getEventById, 
   updateEvent, 
   deleteEvent 
 } from '../backend/src/controllers/eventController.js';
@@ -12,6 +12,16 @@ export default async function handler(req, res) {
   await connectDB();
   
   const { method } = req;
+  
+  // Authentication required for POST, PUT, DELETE
+  if (['POST', 'PUT', 'DELETE'].includes(method)) {
+    try {
+      const user = authenticate(req);
+      req.user = user;
+    } catch (err) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+  }
   
   switch (method) {
     case 'POST':

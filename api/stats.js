@@ -1,11 +1,12 @@
 import { connectDB } from '../lib/db.js';
+import { authenticate } from '../lib/auth.js';
 import { 
-  getDashboardStats,
-  getAnalytics,
-  getRecommendations,
-  getTrendingEvents,
-  getLeaderboard,
-  getSummary
+  dashboardStats as getDashboardStats,
+  analytics as getAnalytics,
+  recommendations as getRecommendations,
+  trending as getTrendingEvents,
+  leaderboard as getLeaderboard,
+  summary as getSummary
 } from '../backend/src/controllers/statsController.js';
 
 export default async function handler(req, res) {
@@ -16,6 +17,18 @@ export default async function handler(req, res) {
   if (method !== 'GET') {
     res.setHeader('Allow', ['GET']);
     return res.status(405).json({ message: `Method ${method} not allowed` });
+  }
+  
+  // Authentication required for most endpoints
+  const protectedEndpoints = ['dashboard', 'analytics', 'recommendations'];
+  
+  if (protectedEndpoints.includes(req.query.action)) {
+    try {
+      const user = authenticate(req);
+      req.user = user;
+    } catch (err) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
   }
   
   switch (req.query.action) {

@@ -1,14 +1,35 @@
 import { connectDB } from '../lib/db.js';
-import { signup, login, logout, getProfile, updateProfile, changePassword, refresh } from '../backend/src/controllers/authController.js';
+import { authenticate } from '../lib/auth.js';
+import { signup, login, logout, me as getProfile, updateProfile, changePassword, refresh } from '../backend/src/controllers/authController.js';
 
 export default async function handler(req, res) {
   await connectDB();
   
   const { method } = req;
   
+  // Authentication required for protected endpoints
+  const protectedEndpoints = [
+    'logout', 
+    'change-password', 
+    'me', 
+    'profile',
+    'refresh'
+  ];
+  
+  const action = req.query.action;
+  
+  if (protectedEndpoints.includes(action) || (method === 'PUT' && action === 'profile')) {
+    try {
+      const user = authenticate(req);
+      req.user = user;
+    } catch (err) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+  }
+  
   switch (method) {
     case 'POST':
-      switch (req.query.action) {
+      switch (action) {
         case 'signup':
           return signup(req, res);
         case 'login':
@@ -23,12 +44,12 @@ export default async function handler(req, res) {
           return res.status(404).json({ message: 'Action not found' });
       }
     case 'GET':
-      if (req.query.action === 'me') {
+      if (action === 'me') {
         return getProfile(req, res);
       }
       return res.status(404).json({ message: 'Action not found' });
     case 'PUT':
-      if (req.query.action === 'profile') {
+      if (action === 'profile') {
         return updateProfile(req, res);
       }
       return res.status(404).json({ message: 'Action not found' });
