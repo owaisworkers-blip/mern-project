@@ -5,7 +5,8 @@
       "src": "api/**/*.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["lib/**", "backend/src/**", "models/**", "utils/**"]
+        "includeFiles": ["lib/**", "backend/src/**", "models/**", "utils/**"],
+        "runtime": "nodejs20.x"
       }
     }
   ],
