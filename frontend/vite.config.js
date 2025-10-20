@@ -16,4 +16,9 @@ export default defineConfig({
       },
     },
   },
+  // For production build, we don't need proxy as frontend and backend are on same domain
+  build: {
+    outDir: 'dist',
+    sourcemap: true
+  }
 })
